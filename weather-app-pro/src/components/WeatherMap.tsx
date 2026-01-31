@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Map, Layers, Maximize2, X } from 'lucide-react'
+import { Map, Maximize2, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 interface WeatherMapProps {
@@ -20,8 +20,6 @@ export function WeatherMap({ lat, lon }: WeatherMapProps) {
     { id: 'clouds_new' as MapLayer, name: 'Clouds', icon: '☁️' },
     { id: 'wind_new' as MapLayer, name: 'Wind', icon: '💨' },
   ]
-
-  const mapUrl = `https://tile.openweathermap.org/map/${activeLayer}/{z}/{x}/{y}.png?appid=${import.meta.env.VITE_WEATHER_API_KEY}`
 
   if (!showMap) {
     return (

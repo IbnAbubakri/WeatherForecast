@@ -8,7 +8,6 @@ interface AdditionalDetailsProps {
 }
 
 export function AdditionalDetails({ weather, unit }: AdditionalDetailsProps) {
-  const speedUnit = unit === 'metric' ? 'm/s' : 'mph'
   const distanceUnit = unit === 'metric' ? 'km' : 'miles'
   const pressureUnit = 'hPa'
 

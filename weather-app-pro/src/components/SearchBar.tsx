@@ -136,7 +136,10 @@ export function SearchBar({ onSearch, onLocationClick, loading }: SearchBarProps
               {loading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                'Search'
+                <>
+                  <Search className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Search</span>
+                </>
               )}
             </Button>
           )}

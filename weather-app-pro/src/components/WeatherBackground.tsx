@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Cloud, CloudRain, Snowflake, Sun, Moon } from 'lucide-react'
+import { Cloud, Snowflake, Sun, Moon } from 'lucide-react'
 
 interface WeatherBackgroundProps {
   weatherCondition: string

@@ -22,7 +22,6 @@ function convertTemp(temp: number, fromUnit: 'metric' | 'imperial', toUnit: 'met
 }
 
 export function AnimatedForecastCard({ data, unit, index }: AnimatedForecastCardProps) {
-  const tempUnit = unit === 'metric' ? '°C' : '°F'
   const dayName = new Intl.DateTimeFormat('en-US', { weekday: 'short' }).format(data.date)
   const dateStr = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(data.date)
 

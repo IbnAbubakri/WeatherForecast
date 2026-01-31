@@ -1,4 +1,4 @@
-import { Cloud, CloudDrizzle, CloudRain, CloudSnow, CloudLightning, Sun, Snow, Wind } from 'lucide-react'
+import { Cloud, CloudDrizzle, CloudRain, CloudSnow, CloudLightning, Sun, Wind } from 'lucide-react'
 
 interface WeatherIconProps {
   iconCode: string

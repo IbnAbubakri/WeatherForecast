@@ -47,7 +47,7 @@ function App() {
       isDay={true}
     >
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl">
+        <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8 max-w-7xl">
           {/* Header */}
           <motion.header
             className="mb-10"
@@ -55,14 +55,14 @@ function App() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.25, 0.4, 0.25, 1] }}
           >
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <motion.div
-                className="flex items-center gap-4"
+                className="flex items-center gap-3 sm:gap-4"
                 whileHover={{ scale: 1.01 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 25 }}
               >
                 <motion.div
-                  className="bg-gradient-to-br from-primary/20 to-secondary/20 p-3 rounded-xl"
+                  className="bg-gradient-to-br from-primary/20 to-secondary/20 p-2 sm:p-3 rounded-xl"
                   animate={{
                     rotate: [0, 5, -5, 0],
                   }}
@@ -72,18 +72,18 @@ function App() {
                     repeatDelay: 5,
                   }}
                 >
-                  <CloudRain className="h-6 w-6 text-primary" />
+                  <CloudRain className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                 </motion.div>
                 <div>
-                  <h1 className="text-3xl font-bold text-foreground tracking-tight">
+                  <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
                     WeatherSphere
                   </h1>
-                  <p className="text-sm text-muted-foreground mt-0.5">
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
                     Professional Weather Intelligence
                   </p>
                 </div>
               </motion.div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3 self-start sm:self-auto">
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}

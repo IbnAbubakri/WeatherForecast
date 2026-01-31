@@ -80,7 +80,7 @@ export function ShareWeather({ city, temp, condition, unit }: ShareWeatherProps)
             )}
           </Button>
 
-          {navigator.share && (
+          {typeof navigator.share !== 'undefined' && (
             <Button
               onClick={handleShare}
               className="flex-1"

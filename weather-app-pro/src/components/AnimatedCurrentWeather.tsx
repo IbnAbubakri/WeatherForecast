@@ -41,8 +41,6 @@ export function AnimatedCurrentWeather({ data, unit, index }: AnimatedCurrentWea
   // Data comes in metric from API, so we need to convert if needed
   const displayTemp = convertTemp(data.main.temp, 'metric', unit)
   const displayFeelsLike = convertTemp(data.main.feels_like, 'metric', unit)
-  const displayTempMin = convertTemp(data.main.temp_min, 'metric', unit)
-  const displayTempMax = convertTemp(data.main.temp_max, 'metric', unit)
   const displayWindSpeed = convertWind(data.wind.speed, 'metric', unit)
 
   return (
@@ -52,10 +50,10 @@ export function AnimatedCurrentWeather({ data, unit, index }: AnimatedCurrentWea
       transition={{ duration: 0.5, delay: index * 0.1 }}
     >
       <Card className="glass-card premium-shadow overflow-hidden hover:shadow-xl transition-shadow duration-300">
-        <CardContent className="p-6 md:p-10">
-          <div className="grid lg:grid-cols-2 gap-10">
+        <CardContent className="p-4 sm:p-6 md:p-10">
+          <div className="grid lg:grid-cols-2 gap-6 lg:gap-10">
             {/* Left: Temperature and Icon */}
-            <div className="flex flex-col sm:flex-row items-center gap-6">
+            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
               <motion.div
                 className="flex-shrink-0"
                 animate={{
@@ -71,23 +69,23 @@ export function AnimatedCurrentWeather({ data, unit, index }: AnimatedCurrentWea
                 <WeatherIcon
                   iconCode={data.weather[0].icon}
                   size={120}
-                  className="text-primary"
+                  className="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 text-primary"
                 />
               </motion.div>
               <div className="text-center sm:text-left">
                 <motion.div
-                  className="flex items-baseline justify-center sm:justify-start gap-2"
+                  className="flex items-baseline justify-center sm:justify-start gap-1 sm:gap-2"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.2, duration: 0.5 }}
                 >
-                  <span className="text-7xl md:text-8xl font-bold text-foreground tracking-tighter">
+                  <span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-foreground tracking-tighter">
                     {Math.round(displayTemp)}°
                   </span>
-                  <span className="text-2xl text-muted-foreground">{tempUnit.replace('°', '')}</span>
+                  <span className="text-xl sm:text-2xl text-muted-foreground">{tempUnit.replace('°', '')}</span>
                 </motion.div>
                 <motion.p
-                  className="text-lg text-muted-foreground capitalize mt-2"
+                  className="text-base sm:text-lg text-muted-foreground capitalize mt-2"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3 }}
