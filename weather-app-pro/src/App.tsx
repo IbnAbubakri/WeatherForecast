@@ -544,7 +544,7 @@ function App() {
               >
                 OpenWeatherMap
               </a>{' '}
-              API
+              API. Built by IbnAbubakri
             </p>
           </motion.footer>
         </div>
