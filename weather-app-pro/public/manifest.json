@@ -1,0 +1,26 @@
+{
+  "name": "WeatherSphere",
+  "short_name": "Weather",
+  "description": "Professional Weather Intelligence - Your ultimate weather companion",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B1220",
+  "theme_color": "#38BDF8",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/cloud.svg",
+      "sizes": "64x64 128x128 256x256 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["weather", "utilities"],
+  "screenshots": [
+    {
+      "src": "/screenshot1.png",
+      "sizes": "540x720",
+      "type": "image/png"
+    }
+  ]
+}
