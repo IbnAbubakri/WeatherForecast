@@ -51,12 +51,12 @@ export function WeatherMap({ lat, lon }: WeatherMapProps) {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-[90vw] h-[90vh] flex flex-col p-0 gap-0">
           <DialogHeader className="px-6 py-4 border-b border-border">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-2 flex-wrap">
               <DialogTitle className="flex items-center gap-3">
                 <Map className="h-5 w-5 text-primary" />
                 Weather Map
               </DialogTitle>
-              <div className="flex gap-2" role="tablist" aria-label="Map layers">
+              <div className="flex gap-1 sm:gap-2" role="tablist" aria-label="Map layers">
                 {layerConfig.map(({ id, name, icon: Icon }) => (
                   <Button
                     key={id}

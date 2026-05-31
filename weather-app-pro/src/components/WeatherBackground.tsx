@@ -44,7 +44,7 @@ export function WeatherBackground({ weatherCondition, isDay, children }: Weather
   const isSnow = weatherCondition.toLowerCase().includes('snow')
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-[100dvh]">
       {/* Background Gradient */}
       <div
         className={`fixed inset-0 -z-20 transition-colors duration-1000 ${isDay ? 'bg-weather-day' : 'bg-weather-night'}`}

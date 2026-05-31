@@ -71,6 +71,13 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: background-color 0.3s, color 0.3s;
+    overflow-x: hidden;
+    overscroll-behavior-y: none;
+  }
+
+  #root {
+    min-height: 100vh;
+    min-height: 100dvh;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -95,7 +102,16 @@
   }
 
   .glass-card {
-    @apply bg-card/80 backdrop-blur-xl border border-border/50 shadow-sm;
+    @apply bg-card/80 border border-border/50 shadow-sm;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+
+  @media (max-width: 768px) {
+    .glass-card {
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
+    }
   }
 
   .bg-weather-day {

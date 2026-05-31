@@ -27,7 +27,7 @@ export function HourlyForecast({ hourly, unit }: HourlyForecastProps) {
         <span className="text-sm text-muted-foreground">Next 24 hours</span>
       </div>
 
-      <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+      <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scroll-smooth" style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'thin' }}>
         {hourly.map((hour, index) => {
           const timeStr = hour.time.toLocaleTimeString('en-US', {
             hour: 'numeric',
@@ -37,7 +37,7 @@ export function HourlyForecast({ hourly, unit }: HourlyForecastProps) {
           return (
             <motion.div
               key={hour.time.toISOString()}
-              className="flex-shrink-0 w-28 bg-card/50 border border-border rounded-xl p-4 hover:bg-card/80 transition-all"
+              className="flex-shrink-0 w-28 bg-card/50 border border-border rounded-xl p-4 hover:bg-card/80 transition-all snap-center"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.05, duration: 0.3 }}
