@@ -23,14 +23,6 @@ interface GeocodingAPIResponse {
   state?: string
 }
 
-interface ReverseGeocodeResponse {
-  name: string
-  lat: number
-  lon: number
-  country: string
-  state?: string
-}
-
 export class GeocodingService {
   private apiKey: string
   private baseUrl: string
@@ -72,25 +64,6 @@ export class GeocodingService {
     }
   }
 
-  async reverseGeocode(lat: number, lon: number): Promise<string> {
-    try {
-      const response = await fetch(
-        `${this.baseUrl}/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${this.apiKey}`
-      )
-
-      if (!response.ok) {
-        throw new Error('Reverse geocoding failed')
-      }
-
-      const data: ReverseGeocodeResponse[] = await response.json()
-      if (data && data.length > 0) {
-        return data[0].name
-      }
-      throw new Error('No location found')
-    } catch (error) {
-      throw error
-    }
-  }
 }
 
 export const geocodingService = new GeocodingService()

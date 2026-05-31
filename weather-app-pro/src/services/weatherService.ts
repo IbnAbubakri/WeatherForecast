@@ -180,20 +180,6 @@ export class WeatherService {
     }))
   }
 
-  async getWeatherWithForecast(
-    city: string,
-    unit: TemperatureUnit = 'metric'
-  ): Promise<{ current: WeatherData; daily: DailyForecast[] }> {
-    const [current, forecast] = await Promise.all([
-      this.getCurrentWeather(city, unit),
-      this.getForecast(city, unit),
-    ])
-
-    const daily = this.processDailyForecast(forecast)
-
-    return { current, daily }
-  }
-
   processHourlyForecast(forecastData: ForecastData): HourlyForecast[] {
     // Get next 24 hours of data
     return forecastData.list.slice(0, 8).map(item => ({

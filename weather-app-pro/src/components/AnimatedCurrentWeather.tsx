@@ -10,38 +10,11 @@ interface AnimatedCurrentWeatherProps {
   index: number
 }
 
-// Helper function to convert temperature
-function convertTemp(temp: number, fromUnit: 'metric' | 'imperial', toUnit: 'metric' | 'imperial'): number {
-  if (fromUnit === toUnit) return temp
-  if (fromUnit === 'metric') {
-    // Convert Celsius to Fahrenheit
-    return (temp * 9/5) + 32
-  } else {
-    // Convert Fahrenheit to Celsius
-    return (temp - 32) * 5/9
-  }
-}
-
-// Helper function to convert wind speed
-function convertWind(speed: number, fromUnit: 'metric' | 'imperial', toUnit: 'metric' | 'imperial'): number {
-  if (fromUnit === toUnit) return speed
-  if (fromUnit === 'metric') {
-    // Convert m/s to mph
-    return speed * 2.237
-  } else {
-    // Convert mph to m/s
-    return speed / 2.237
-  }
-}
-
 export function AnimatedCurrentWeather({ data, unit, index }: AnimatedCurrentWeatherProps) {
   const tempUnit = unit === 'metric' ? '°C' : '°F'
   const speedUnit = unit === 'metric' ? 'm/s' : 'mph'
 
-  // Data comes in metric from API, so we need to convert if needed
-  const displayTemp = convertTemp(data.main.temp, 'metric', unit)
-  const displayFeelsLike = convertTemp(data.main.feels_like, 'metric', unit)
-  const displayWindSpeed = convertWind(data.wind.speed, 'metric', unit)
+  const windSpeed = unit === 'imperial' ? Math.round(data.wind.speed * 2.237) : Math.round(data.wind.speed)
 
   return (
     <motion.div
@@ -52,7 +25,6 @@ export function AnimatedCurrentWeather({ data, unit, index }: AnimatedCurrentWea
       <Card className="glass-card premium-shadow overflow-hidden hover:shadow-xl transition-shadow duration-300">
         <CardContent className="p-4 sm:p-6 md:p-10">
           <div className="grid lg:grid-cols-2 gap-6 lg:gap-10">
-            {/* Left: Temperature and Icon */}
             <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
               <motion.div
                 className="flex-shrink-0"
@@ -80,7 +52,7 @@ export function AnimatedCurrentWeather({ data, unit, index }: AnimatedCurrentWea
                   transition={{ delay: 0.2, duration: 0.5 }}
                 >
                   <span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-foreground tracking-tighter">
-                    {Math.round(displayTemp)}°
+                    {Math.round(data.main.temp)}°
                   </span>
                   <span className="text-xl sm:text-2xl text-muted-foreground">{tempUnit.replace('°', '')}</span>
                 </motion.div>
@@ -98,12 +70,11 @@ export function AnimatedCurrentWeather({ data, unit, index }: AnimatedCurrentWea
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.4 }}
                 >
-                  Feels like {Math.round(displayFeelsLike)}{tempUnit}
+                  Feels like {Math.round(data.main.feels_like)}{tempUnit}
                 </motion.p>
               </div>
             </div>
 
-            {/* Right: Location and Details */}
             <div className="space-y-6">
               <motion.div
                 className="text-center sm:text-left"
@@ -117,7 +88,7 @@ export function AnimatedCurrentWeather({ data, unit, index }: AnimatedCurrentWea
 
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { icon: Wind, label: 'Wind', value: Math.round(displayWindSpeed), unit: speedUnit, color: 'text-primary' },
+                  { icon: Wind, label: 'Wind', value: windSpeed, unit: speedUnit, color: 'text-primary' },
                   { icon: Droplets, label: 'Humidity', value: data.main.humidity, unit: '%', color: 'text-primary' },
                   { icon: Eye, label: 'Visibility', value: (data.visibility / 1000).toFixed(1), unit: 'km', color: 'text-primary' },
                   { icon: Gauge, label: 'Pressure', value: data.main.pressure, unit: 'hPa', color: 'text-primary' },

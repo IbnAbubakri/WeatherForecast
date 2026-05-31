@@ -13,9 +13,9 @@ import {
   Legend,
 } from 'recharts'
 import { DailyForecast } from '@/types/weather'
-import { Droplets, Wind, Thermometer, ChevronDown, Waves, Gauge } from 'lucide-react'
+import { Droplets, Wind, Thermometer, ChevronDown, Waves } from 'lucide-react'
 
-type ChartType = 'temperature' | 'precipitation' | 'wind' | 'humidity' | 'pressure' | 'feels_like' | null
+type ChartType = 'temperature' | 'precipitation' | 'wind' | 'humidity' | null
 
 interface WeatherChartsProps {
   forecast: DailyForecast[]
@@ -37,8 +37,6 @@ export function WeatherCharts({ forecast, unit }: WeatherChartsProps) {
     wind: Math.round(day.windSpeed * (unit === 'imperial' ? 2.237 : 1)),
     humidity: day.humidity,
     precipitation: day.pop, // Probability percentage (0-100)
-    pressure: 1013, // Note: pressure data not available in DailyForecast type — would need API extension
-    feelsLike: Math.round((day.temp.min + day.temp.max) / 2), // Approximate feels like
   }))
 
   const chartButtons = [
@@ -69,20 +67,6 @@ export function WeatherCharts({ forecast, unit }: WeatherChartsProps) {
       icon: Waves,
       gradient: 'from-teal-500 to-emerald-500',
       bgGradient: 'bg-gradient-to-r from-teal-500 to-emerald-500',
-    },
-    {
-      type: 'pressure' as ChartType,
-      label: 'Pressure',
-      icon: Gauge,
-      gradient: 'from-indigo-500 to-purple-500',
-      bgGradient: 'bg-gradient-to-r from-indigo-500 to-purple-500',
-    },
-    {
-      type: 'feels_like' as ChartType,
-      label: 'Feels Like',
-      icon: Thermometer,
-      gradient: 'from-rose-500 to-orange-500',
-      bgGradient: 'bg-gradient-to-r from-rose-500 to-orange-500',
     },
   ]
 
@@ -359,122 +343,6 @@ export function WeatherCharts({ forecast, unit }: WeatherChartsProps) {
           </motion.div>
         )}
 
-        {activeChart === 'pressure' && (
-          <motion.div
-            key="pressure"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="glass-card rounded-2xl p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="bg-indigo-500/20 p-2 rounded-lg">
-                  <Gauge className="h-5 w-5 text-indigo-500" />
-                </div>
-                <h3 className="text-lg font-semibold text-foreground">Pressure Trend</h3>
-              </div>
-              <ResponsiveContainer width="100%" height={250}>
-                <LineChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="stroke-border/30" />
-                  <XAxis
-                    dataKey="name"
-                    stroke="hsl(var(--muted-foreground))"
-                    style={{ fontSize: '12px' }}
-                  />
-                  <YAxis
-                    stroke="hsl(var(--muted-foreground))"
-                    style={{ fontSize: '12px' }}
-                    domain={[990, 1030]}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: 'hsl(var(--card))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '8px',
-                      color: 'hsl(var(--foreground))',
-                    }}
-                    labelStyle={{ color: 'hsl(var(--foreground))' }}
-                    formatter={(value) => [`${(value as number) ?? 0} hPa`, 'Pressure']}
-                  />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="pressure"
-                    stroke="hsl(var(--secondary))"
-                    strokeWidth={3}
-                    name="Pressure (hPa)"
-                    dot={{ fill: 'hsl(var(--secondary))', r: 4 }}
-                    activeDot={{ r: 6 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </motion.div>
-        )}
-
-        {activeChart === 'feels_like' && (
-          <motion.div
-            key="feels_like"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="glass-card rounded-2xl p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="bg-rose-500/20 p-2 rounded-lg">
-                  <Thermometer className="h-5 w-5 text-rose-500" />
-                </div>
-                <h3 className="text-lg font-semibold text-foreground">Feels Like vs Actual</h3>
-              </div>
-              <ResponsiveContainer width="100%" height={250}>
-                <LineChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="stroke-border/30" />
-                  <XAxis
-                    dataKey="name"
-                    stroke="hsl(var(--muted-foreground))"
-                    style={{ fontSize: '12px' }}
-                  />
-                  <YAxis
-                    stroke="hsl(var(--muted-foreground))"
-                    style={{ fontSize: '12px' }}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: 'hsl(var(--card))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '8px',
-                      color: 'hsl(var(--foreground))',
-                    }}
-                    labelStyle={{ color: 'hsl(var(--foreground))' }}
-                    formatter={(value, name) => [`${(value as number) ?? 0}${tempUnit}`, (name as string) ?? '']}
-                  />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="max"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth={2}
-                    name="Actual Temp"
-                    dot={{ fill: 'hsl(var(--primary))', r: 4 }}
-                    activeDot={{ r: 6 }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="feelsLike"
-                    stroke="hsl(var(--accent))"
-                    strokeWidth={2}
-                    name="Feels Like"
-                    dot={{ fill: 'hsl(var(--accent))', r: 4 }}
-                    activeDot={{ r: 6 }}
-                    strokeDasharray="5 5"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </motion.div>
-        )}
       </AnimatePresence>
     </motion.div>
   )

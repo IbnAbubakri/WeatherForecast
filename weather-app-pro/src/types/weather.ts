@@ -92,13 +92,6 @@ export interface HourlyForecast {
   pop: number;
 }
 
-export interface ExtendedWeatherData {
-  uvIndex?: number;
-  aqi?: number;
-  moonPhase?: string;
-  moonIllumination?: number;
-}
-
 export type TemperatureUnit = 'metric' | 'imperial';
 
 export interface WeatherState {
