@@ -14,7 +14,7 @@ export function ShareWeather({ city, temp, condition, unit }: ShareWeatherProps)
   const [copied, setCopied] = useState(false)
   const tempUnit = unit === 'metric' ? '°C' : '°F'
 
-  const shareText = `🌤️ Weather in ${city}: ${Math.round(temp)}${tempUnit}, ${condition} - Check it out on WeatherSphere!`
+  const shareText = `Weather in ${city}: ${Math.round(temp)}${tempUnit}, ${condition} - Check it out on WeatherSphere!`
 
   const handleCopy = async () => {
     try {

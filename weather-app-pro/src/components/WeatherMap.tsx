@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Map, Maximize2, X } from 'lucide-react'
+import { Map, Thermometer, CloudRain, Cloud, Wind, Maximize2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 
 interface WeatherMapProps {
   lat: number
@@ -10,19 +11,19 @@ interface WeatherMapProps {
 
 type MapLayer = 'temp_new' | 'precipitation_new' | 'clouds_new' | 'wind_new'
 
+const layerConfig: Array<{ id: MapLayer; name: string; icon: React.ElementType }> = [
+  { id: 'temp_new', name: 'Temperature', icon: Thermometer },
+  { id: 'precipitation_new', name: 'Precipitation', icon: CloudRain },
+  { id: 'clouds_new', name: 'Clouds', icon: Cloud },
+  { id: 'wind_new', name: 'Wind', icon: Wind },
+]
+
 export function WeatherMap({ lat, lon }: WeatherMapProps) {
-  const [showMap, setShowMap] = useState(false)
+  const [open, setOpen] = useState(false)
   const [activeLayer, setActiveLayer] = useState<MapLayer>('temp_new')
 
-  const layers = [
-    { id: 'temp_new' as MapLayer, name: 'Temperature', icon: '🌡️' },
-    { id: 'precipitation_new' as MapLayer, name: 'Precipitation', icon: '🌧️' },
-    { id: 'clouds_new' as MapLayer, name: 'Clouds', icon: '☁️' },
-    { id: 'wind_new' as MapLayer, name: 'Wind', icon: '💨' },
-  ]
-
-  if (!showMap) {
-    return (
+  return (
+    <>
       <motion.div
         className="glass-card rounded-2xl p-6"
         initial={{ opacity: 0, y: 20 }}
@@ -40,62 +41,47 @@ export function WeatherMap({ lat, lon }: WeatherMapProps) {
             </div>
           </div>
 
-          <Button onClick={() => setShowMap(true)} size="sm">
+          <Button onClick={() => setOpen(true)} size="sm">
             <Maximize2 className="h-4 w-4 mr-2" />
             Open
           </Button>
         </div>
       </motion.div>
-    )
-  }
 
-  return (
-    <motion.div
-      className="fixed inset-0 z-50 bg-background"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-    >
-      <div className="h-full flex flex-col">
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-border">
-          <div className="flex items-center gap-3">
-            <Map className="h-6 w-6 text-primary" />
-            <h2 className="text-xl font-semibold text-foreground">Weather Map</h2>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-[90vw] h-[90vh] flex flex-col p-0 gap-0">
+          <DialogHeader className="px-6 py-4 border-b border-border">
+            <div className="flex items-center justify-between">
+              <DialogTitle className="flex items-center gap-3">
+                <Map className="h-5 w-5 text-primary" />
+                Weather Map
+              </DialogTitle>
+              <div className="flex gap-2" role="tablist" aria-label="Map layers">
+                {layerConfig.map(({ id, name, icon: Icon }) => (
+                  <Button
+                    key={id}
+                    variant={activeLayer === id ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setActiveLayer(id)}
+                    role="tab"
+                    aria-selected={activeLayer === id}
+                  >
+                    <Icon className="h-4 w-4 mr-2" aria-hidden="true" />
+                    {name}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </DialogHeader>
+          <div className="flex-1 relative bg-muted">
+            <iframe
+              src={`https://openweathermap.org/weathermap?basemap=map&cities=true&layer=${activeLayer}&lat=${lat}&lon=${lon}&zoom=10`}
+              className="absolute inset-0 w-full h-full border-0"
+              title={`Weather map showing ${layerConfig.find(l => l.id === activeLayer)?.name.toLowerCase() ?? 'weather'} layer`}
+            />
           </div>
-
-          <div className="flex items-center gap-2">
-            <Button onClick={() => setShowMap(false)} variant="outline" size="sm">
-              <X className="h-4 w-4 mr-2" />
-              Close
-            </Button>
-          </div>
-        </div>
-
-        {/* Map Layers */}
-        <div className="flex gap-2 p-4 border-b border-border overflow-x-auto">
-          {layers.map((layer) => (
-            <Button
-              key={layer.id}
-              variant={activeLayer === layer.id ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setActiveLayer(layer.id)}
-            >
-              <span className="mr-2">{layer.icon}</span>
-              {layer.name}
-            </Button>
-          ))}
-        </div>
-
-        {/* Map */}
-        <div className="flex-1 relative bg-muted">
-          <iframe
-            src={`https://openweathermap.org/weathermap?basemap=map&cities=true&layer=${activeLayer}&lat=${lat}&lon=${lon}&zoom=10`}
-            className="absolute inset-0 w-full h-full border-0"
-            title="Weather Map"
-          />
-        </div>
-      </div>
-    </motion.div>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }

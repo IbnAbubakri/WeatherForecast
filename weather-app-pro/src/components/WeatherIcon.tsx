@@ -6,7 +6,30 @@ interface WeatherIconProps {
   className?: string
 }
 
+const iconLabels: Record<string, string> = {
+  '01d': 'Clear sky',
+  '01n': 'Clear night',
+  '02d': 'Few clouds',
+  '02n': 'Few clouds at night',
+  '03d': 'Scattered clouds',
+  '03n': 'Scattered clouds at night',
+  '04d': 'Broken clouds',
+  '04n': 'Broken clouds at night',
+  '09d': 'Shower rain',
+  '09n': 'Shower rain at night',
+  '10d': 'Rain',
+  '10n': 'Rain at night',
+  '11d': 'Thunderstorm',
+  '11n': 'Thunderstorm at night',
+  '13d': 'Snow',
+  '13n': 'Snow at night',
+  '50d': 'Mist',
+  '50n': 'Mist at night',
+}
+
 export function WeatherIcon({ iconCode, size = 64, className = '' }: WeatherIconProps) {
+  const label = iconLabels[iconCode] || 'Weather icon'
+
   const getIcon = () => {
     // Clear sky
     if (iconCode === '01d' || iconCode === '01n') {
@@ -48,5 +71,9 @@ export function WeatherIcon({ iconCode, size = 64, className = '' }: WeatherIcon
     return <Sun size={size} className={className} />
   }
 
-  return getIcon()
+  return (
+    <span role="img" aria-label={label}>
+      {getIcon()}
+    </span>
+  )
 }

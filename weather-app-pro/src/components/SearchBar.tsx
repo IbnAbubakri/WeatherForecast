@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Search, MapPin, Loader2, Navigation } from 'lucide-react'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { geocodingService, CitySuggestion } from '@/services/geocodingService'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -21,19 +22,16 @@ export function SearchBar({ onSearch, onLocationClick, loading }: SearchBarProps
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
   useEffect(() => {
-    // Clear previous timer
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current)
     }
 
-    // Don't search if input is too short
     if (city.length < 2) {
       setSuggestions([])
       setShowSuggestions(false)
       return
     }
 
-    // Debounce the API call
     debounceTimerRef.current = setTimeout(async () => {
       setIsLoadingSuggestions(true)
       try {
@@ -48,7 +46,6 @@ export function SearchBar({ onSearch, onLocationClick, loading }: SearchBarProps
       }
     }, 300)
 
-    // Cleanup
     return () => {
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current)
@@ -56,7 +53,6 @@ export function SearchBar({ onSearch, onLocationClick, loading }: SearchBarProps
     }
   }, [city])
 
-  // Close suggestions when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -87,6 +83,7 @@ export function SearchBar({ onSearch, onLocationClick, loading }: SearchBarProps
   return (
     <div ref={containerRef} className="relative w-full max-w-3xl mx-auto">
       <form onSubmit={handleSubmit}>
+        <Label htmlFor="city-search" className="sr-only">Search city</Label>
         <motion.div
           className="relative flex items-center bg-card border-2 border-border rounded-xl overflow-hidden focus-within:border-primary transition-all shadow-sm"
           whileFocus={{ scale: 1.01 }}
@@ -97,9 +94,10 @@ export function SearchBar({ onSearch, onLocationClick, loading }: SearchBarProps
               type="button"
               onClick={onLocationClick}
               disabled={loading}
-              className="pl-4 pr-3"
+              className="pl-4 pr-3 cursor-pointer"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
+              aria-label="Use current location"
             >
               <Navigation className={`h-5 w-5 ${loading ? 'animate-pulse text-primary' : 'text-muted-foreground'}`} />
             </motion.button>
@@ -109,10 +107,11 @@ export function SearchBar({ onSearch, onLocationClick, loading }: SearchBarProps
             animate={loading ? { rotate: 360 } : {}}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
           >
-            <Search className="h-5 w-5 text-muted-foreground" />
+            <Search className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
           </motion.div>
           <Input
             ref={inputRef}
+            id="city-search"
             type="text"
             placeholder="Search city name..."
             value={city}
@@ -123,14 +122,14 @@ export function SearchBar({ onSearch, onLocationClick, loading }: SearchBarProps
           />
           {isLoadingSuggestions && (
             <div className="pr-4">
-              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" aria-hidden="true" />
             </div>
           )}
           {!isLoadingSuggestions && city.trim() && (
             <Button
               type="submit"
               disabled={loading}
-              className="mr-2"
+              className="mr-2 cursor-pointer"
               size="sm"
             >
               {loading ? (
@@ -146,7 +145,6 @@ export function SearchBar({ onSearch, onLocationClick, loading }: SearchBarProps
         </motion.div>
       </form>
 
-      {/* Suggestions Dropdown */}
       <AnimatePresence>
         {showSuggestions && suggestions.length > 0 && (
           <>
@@ -163,6 +161,8 @@ export function SearchBar({ onSearch, onLocationClick, loading }: SearchBarProps
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.98 }}
               transition={{ duration: 0.2 }}
+              role="listbox"
+              aria-label="City suggestions"
             >
               <div className="max-h-80 overflow-y-auto py-2">
                 {suggestions.map((suggestion, index) => (
@@ -177,10 +177,12 @@ export function SearchBar({ onSearch, onLocationClick, loading }: SearchBarProps
                       e.stopPropagation()
                       handleSelectSuggestion(suggestion)
                     }}
-                    className="w-full px-4 py-3 text-left hover:bg-muted transition-colors flex items-center gap-3 border-b border-border/50 last:border-b-0"
+                    className="w-full px-4 py-3 text-left hover:bg-muted transition-colors flex items-center gap-3 border-b border-border/50 last:border-b-0 cursor-pointer"
                     whileHover={{ x: 4 }}
+                    role="option"
+                    aria-selected={false}
                   >
-                    <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                    <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" aria-hidden="true" />
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-sm truncate text-foreground">
                         {suggestion.name}

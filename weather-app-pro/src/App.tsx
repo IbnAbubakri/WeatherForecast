@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, lazy, Suspense } from 'react'
 import { useWeather } from '@/hooks/useWeather'
 import { SearchBar } from '@/components/SearchBar'
 import { UnitToggle } from '@/components/UnitToggle'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { AnimatedCurrentWeather } from '@/components/AnimatedCurrentWeather'
 import { AnimatedWeatherForecast } from '@/components/AnimatedWeatherForecast'
-import { WeatherCharts } from '@/components/WeatherCharts'
 import { HourlyForecast } from '@/components/HourlyForecast'
 import { AdditionalDetails } from '@/components/AdditionalDetails'
 import { RecentCities, addRecentCity } from '@/components/RecentCities'
@@ -20,6 +19,8 @@ import { WeatherSkeleton, ForecastSkeleton } from '@/components/WeatherSkeleton'
 import { Cloud, CloudRain, AlertCircle, ChevronDown, Calendar, Compass, Info } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { motion, AnimatePresence } from 'framer-motion'
+
+const WeatherCharts = lazy(() => import('@/components/WeatherCharts').then(m => ({ default: m.WeatherCharts })))
 
 function App() {
   const { currentWeather, dailyForecast, hourlyForecast, loading, error, unit, fetchWeather, fetchWeatherByLocation, toggleUnit } = useWeather()
@@ -46,7 +47,10 @@ function App() {
       weatherCondition={currentWeather?.weather[0]?.main || ''}
       isDay={true}
     >
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-lg">
+        Skip to main content
+      </a>
+      <div id="main-content" className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
         <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8 max-w-7xl">
           {/* Header */}
           <motion.header
@@ -136,23 +140,15 @@ function App() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3 }}
+                role="alert"
               >
-                <motion.div
-                  className="flex items-center gap-3"
-                  animate={{
-                    x: [0, -5, 5, -5, 0],
-                  }}
-                  transition={{
-                    duration: 0.5,
-                    repeat: 1,
-                  }}
-                >
+                <div className="flex items-center gap-3">
                   <AlertCircle className="h-5 w-5 text-destructive" />
                   <div>
                     <p className="font-medium text-destructive">Unable to fetch weather</p>
                     <p className="text-sm text-destructive/80">{error}</p>
                   </div>
-                </motion.div>
+                </div>
                 <Button
                   variant="outline"
                   size="sm"
@@ -442,7 +438,9 @@ function App() {
                     </motion.div>
 
                     {/* Weather Charts */}
-                    <WeatherCharts forecast={dailyForecast} unit={unit} />
+                    <Suspense fallback={<div className="h-10" />}>
+                      <WeatherCharts forecast={dailyForecast} unit={unit} />
+                    </Suspense>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -513,7 +511,7 @@ function App() {
                   <motion.button
                     key={city}
                     onClick={() => fetchWeather(city)}
-                    className="px-4 py-2 bg-muted/50 hover:bg-muted border border-border rounded-lg transition-all hover:scale-105 hover:shadow-md"
+                    className="px-4 py-2 bg-muted/50 hover:bg-muted border border-border rounded-lg transition-all hover:scale-105 hover:shadow-md cursor-pointer"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4 + index * 0.05 }}

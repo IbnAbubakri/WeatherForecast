@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import type { HourlyForecast as HourlyForecastType } from '@/types/weather'
-import { Clock, Droplets, Wind } from 'lucide-react'
+import { Clock, Droplets, Wind, Cloud } from 'lucide-react'
 import { WeatherIcon } from '@/components/WeatherIcon'
 
 interface HourlyForecastProps {
@@ -60,7 +60,7 @@ export function HourlyForecast({ hourly, unit }: HourlyForecastProps) {
                 <span className="text-[10px]">{speedUnit}</span>
               </div>
               <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1 justify-center">
-                ☁️ <span>{hour.clouds}%</span>
+                <Cloud className="h-3 w-3" aria-hidden="true" /> <span>{hour.clouds}%</span>
               </div>
             </motion.div>
           )

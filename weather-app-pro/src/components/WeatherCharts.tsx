@@ -37,7 +37,7 @@ export function WeatherCharts({ forecast, unit }: WeatherChartsProps) {
     wind: Math.round(day.windSpeed * (unit === 'imperial' ? 2.237 : 1)),
     humidity: day.humidity,
     precipitation: day.pop, // Probability percentage (0-100)
-    pressure: 1013, // Default pressure (would need to be added to DailyForecast type)
+    pressure: 1013, // Note: pressure data not available in DailyForecast type — would need API extension
     feelsLike: Math.round((day.temp.min + day.temp.max) / 2), // Approximate feels like
   }))
 
@@ -230,7 +230,7 @@ export function WeatherCharts({ forecast, unit }: WeatherChartsProps) {
                       boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
                     }}
                     labelStyle={{ color: '#38BDF8' }}
-                    formatter={(value: number | undefined) => [`${value ?? 0}%`, 'Probability']}
+                    formatter={(value) => [`${(value as number) ?? 0}%`, 'Probability']}
                   />
                   <Legend />
                   <Area
@@ -282,7 +282,7 @@ export function WeatherCharts({ forecast, unit }: WeatherChartsProps) {
                       color: 'hsl(var(--foreground))',
                     }}
                     labelStyle={{ color: 'hsl(var(--foreground))' }}
-                    formatter={(value: number | undefined) => [`${value ?? 0} ${speedUnit}`, 'Wind']}
+                    formatter={(value) => [`${(value as number) ?? 0} ${speedUnit}`, 'Wind']}
                   />
                   <Legend />
                   <Line
@@ -342,7 +342,7 @@ export function WeatherCharts({ forecast, unit }: WeatherChartsProps) {
                       color: 'hsl(var(--foreground))',
                     }}
                     labelStyle={{ color: 'hsl(var(--foreground))' }}
-                    formatter={(value: number | undefined) => [`${value ?? 0}%`, 'Humidity']}
+                    formatter={(value) => [`${(value as number) ?? 0}%`, 'Humidity']}
                   />
                   <Legend />
                   <Area
@@ -395,7 +395,7 @@ export function WeatherCharts({ forecast, unit }: WeatherChartsProps) {
                       color: 'hsl(var(--foreground))',
                     }}
                     labelStyle={{ color: 'hsl(var(--foreground))' }}
-                    formatter={(value: number | undefined) => [`${value ?? 0} hPa`, 'Pressure']}
+                    formatter={(value) => [`${(value as number) ?? 0} hPa`, 'Pressure']}
                   />
                   <Legend />
                   <Line
@@ -448,7 +448,7 @@ export function WeatherCharts({ forecast, unit }: WeatherChartsProps) {
                       color: 'hsl(var(--foreground))',
                     }}
                     labelStyle={{ color: 'hsl(var(--foreground))' }}
-                    formatter={(value: number | undefined, name: string | undefined) => [`${value ?? 0}${tempUnit}`, name ?? '']}
+                    formatter={(value, name) => [`${(value as number) ?? 0}${tempUnit}`, (name as string) ?? '']}
                   />
                   <Legend />
                   <Line

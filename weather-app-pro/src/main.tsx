@@ -4,6 +4,7 @@ import './index.css'
 import App from './App.tsx'
 import { ThemeProvider } from './contexts/ThemeContext'
 import { ErrorBoundary } from './components/ErrorBoundary'
+import { Toaster } from '@/components/ui/toaster'
 
 // Register service worker for PWA
 if ('serviceWorker' in navigator) {
@@ -20,6 +21,7 @@ createRoot(document.getElementById('root')!).render(
     <ErrorBoundary>
       <ThemeProvider>
         <App />
+        <Toaster />
       </ThemeProvider>
     </ErrorBoundary>
   </StrictMode>,

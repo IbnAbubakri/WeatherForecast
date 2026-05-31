@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Cloud, Snowflake, Sun, Moon } from 'lucide-react'
+import { Cloud, Snowflake, Sun, Moon, Shield } from 'lucide-react'
+
+const prefersReducedMotion = typeof window !== 'undefined'
+  ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  : false
 
 interface WeatherBackgroundProps {
   weatherCondition: string
@@ -110,61 +114,73 @@ export function WeatherBackground({ weatherCondition, isDay, children }: Weather
       </AnimatePresence>
 
       {/* Rain Particles */}
-      <AnimatePresence>
-        {isRain && (
-          <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
-            {particles.map((particle) => (
-              <motion.div
-                key={particle.id}
-                className="absolute top-0 w-0.5 h-8 bg-blue-400/30 rounded-full"
-                style={{ left: `${particle.x}%` }}
-                initial={{ y: -50, opacity: 0 }}
-                animate={{
-                  y: ['0vh', '100vh'],
-                  opacity: [0, 1, 0],
-                }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  delay: particle.delay,
-                  ease: 'linear',
-                }}
-                exit={{ opacity: 0 }}
-              />
-            ))}
-          </div>
-        )}
-      </AnimatePresence>
+      {!prefersReducedMotion && (
+        <AnimatePresence>
+          {isRain && (
+            <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
+              {particles.map((particle) => (
+                <motion.div
+                  key={particle.id}
+                  className="absolute top-0 w-0.5 h-8 bg-blue-400/30 rounded-full"
+                  style={{ left: `${particle.x}%` }}
+                  initial={{ y: -50, opacity: 0 }}
+                  animate={{
+                    y: ['0vh', '100vh'],
+                    opacity: [0, 1, 0],
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    delay: particle.delay,
+                    ease: 'linear',
+                  }}
+                  exit={{ opacity: 0 }}
+                />
+              ))}
+            </div>
+          )}
+        </AnimatePresence>
+      )}
 
       {/* Snow Particles */}
-      <AnimatePresence>
-        {isSnow && (
-          <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
-            {particles.map((particle) => (
-              <motion.div
-                key={particle.id}
-                className="absolute top-0"
-                style={{ left: `${particle.x}%` }}
-                initial={{ y: -50, opacity: 0, x: 0 }}
-                animate={{
-                  y: ['0vh', '100vh'],
-                  opacity: [0, 1, 0],
-                  x: [0, particle.x % 2 === 0 ? 30 : -30],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  delay: particle.delay,
-                  ease: 'linear',
-                }}
-                exit={{ opacity: 0 }}
-              >
-                <Snowflake className="h-4 w-4 text-white/50" />
-              </motion.div>
-            ))}
-          </div>
-        )}
-      </AnimatePresence>
+      {!prefersReducedMotion && (
+        <AnimatePresence>
+          {isSnow && (
+            <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
+              {particles.map((particle) => (
+                <motion.div
+                  key={particle.id}
+                  className="absolute top-0"
+                  style={{ left: `${particle.x}%` }}
+                  initial={{ y: -50, opacity: 0, x: 0 }}
+                  animate={{
+                    y: ['0vh', '100vh'],
+                    opacity: [0, 1, 0],
+                    x: [0, particle.x % 2 === 0 ? 30 : -30],
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    delay: particle.delay,
+                    ease: 'linear',
+                  }}
+                  exit={{ opacity: 0 }}
+                >
+                  <Snowflake className="h-4 w-4 text-white/50" />
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </AnimatePresence>
+      )}
+
+      {/* Reduced motion fallback */}
+      {prefersReducedMotion && (isRain || isSnow) && (
+        <div className="fixed bottom-4 left-4 z-20 bg-card/80 backdrop-blur-sm px-3 py-2 rounded-lg border border-border text-xs text-muted-foreground flex items-center gap-2">
+          <Shield className="h-3 w-3" />
+          Weather effects hidden (reduced motion)
+        </div>
+      )}
 
       {/* Content */}
       <div className="relative z-10">{children}</div>

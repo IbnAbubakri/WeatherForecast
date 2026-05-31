@@ -4,7 +4,6 @@
 
 @layer base {
   :root {
-    /* Light Theme */
     --background: 0 0% 100%;
     --foreground: 222 47% 11%;
     --card: 0 0% 100%;
@@ -25,10 +24,14 @@
     --input: 214 32% 91%;
     --ring: 199 89% 48%;
     --radius: 0.5rem;
+    --chart-1: 199 89% 48%;
+    --chart-2: 262 83% 58%;
+    --chart-3: 24 95% 53%;
+    --chart-4: 160 60% 45%;
+    --chart-5: 330 80% 55%;
   }
 
   .dark {
-    /* Dark Theme */
     --background: 222 47% 11%;
     --foreground: 210 40% 98%;
     --card: 223 47% 15%;
@@ -48,6 +51,11 @@
     --border: 223 47% 20%;
     --input: 223 47% 20%;
     --ring: 199 89% 48%;
+    --chart-1: 199 89% 60%;
+    --chart-2: 262 83% 68%;
+    --chart-3: 24 95% 63%;
+    --chart-4: 160 60% 55%;
+    --chart-5: 330 80% 65%;
   }
 }
 
@@ -58,11 +66,25 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: background-color 0.3s, color 0.3s;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Bricolage Grotesque', serif;
+    font-weight: 700;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

@@ -1,15 +1,15 @@
 import { motion } from 'framer-motion'
-import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
+import { TrendingUp, TrendingDown, Minus, Sun, Cloud, CloudRain } from 'lucide-react'
+import type { DailyForecast } from '@/types/weather'
 
 interface WeeklySummaryProps {
-  dailyForecast: any[]
+  dailyForecast: DailyForecast[]
   unit: 'metric' | 'imperial'
 }
 
 export function WeeklySummary({ dailyForecast, unit }: WeeklySummaryProps) {
   const tempUnit = unit === 'metric' ? '°C' : '°F'
 
-  // Calculate averages
   const avgHigh = Math.round(
     dailyForecast.reduce((sum, day) => sum + day.temp.max, 0) / dailyForecast.length
   )
@@ -20,7 +20,6 @@ export function WeeklySummary({ dailyForecast, unit }: WeeklySummaryProps) {
     dailyForecast.reduce((sum, day) => sum + day.humidity, 0) / dailyForecast.length
   )
 
-  // Count conditions
   const sunnyDays = dailyForecast.filter(d => d.weather.main.toLowerCase().includes('clear')).length
   const rainyDays = dailyForecast.filter(d =>
     d.weather.main.toLowerCase().includes('rain') ||
@@ -33,7 +32,7 @@ export function WeeklySummary({ dailyForecast, unit }: WeeklySummaryProps) {
     const lastDay = dailyForecast[dailyForecast.length - 1].temp.max
     if (lastDay > firstDay + 2) return { icon: TrendingUp, text: 'Warming up', color: 'text-red-500' }
     if (lastDay < firstDay - 2) return { icon: TrendingDown, text: 'Cooling down', color: 'text-blue-500' }
-    return { icon: Minus, text: 'Stable', color: 'text-gray-500' }
+    return { icon: Minus, text: 'Stable', color: 'text-muted-foreground' }
   }
 
   const trend = getWeeklyTrend()
@@ -71,10 +70,19 @@ export function WeeklySummary({ dailyForecast, unit }: WeeklySummaryProps) {
           <span className="text-sm text-foreground">{trend.text}</span>
         </div>
 
-        <div className="flex gap-4 text-sm">
-          <span>☀️ {sunnyDays}</span>
-          <span>☁️ {cloudyDays}</span>
-          <span>🌧️ {rainyDays}</span>
+        <div className="flex gap-4 text-sm text-muted-foreground">
+          <span className="flex items-center gap-1">
+            <Sun className="h-4 w-4 text-yellow-500" aria-hidden="true" />
+            {sunnyDays}
+          </span>
+          <span className="flex items-center gap-1">
+            <Cloud className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+            {cloudyDays}
+          </span>
+          <span className="flex items-center gap-1">
+            <CloudRain className="h-4 w-4 text-blue-500" aria-hidden="true" />
+            {rainyDays}
+          </span>
         </div>
       </div>
     </motion.div>
