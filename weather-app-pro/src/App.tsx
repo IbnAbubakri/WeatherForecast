@@ -6,17 +6,12 @@ import { ThemeToggle } from '@/components/ThemeToggle'
 import { AnimatedCurrentWeather } from '@/components/AnimatedCurrentWeather'
 import { AnimatedWeatherForecast } from '@/components/AnimatedWeatherForecast'
 import { HourlyForecast } from '@/components/HourlyForecast'
-import { AdditionalDetails } from '@/components/AdditionalDetails'
 import { RecentCities, addRecentCity } from '@/components/RecentCities'
 import { WeatherBackground } from '@/components/WeatherBackground'
 import { WeatherMap } from '@/components/WeatherMap'
-import { WindCompass } from '@/components/WindCompass'
-import { WeatherTips } from '@/components/WeatherTips'
-import { ShareWeather } from '@/components/ShareWeather'
-import { WeeklySummary } from '@/components/WeeklySummary'
-import { WeatherDescription } from '@/components/WeatherDescription'
+
 import { WeatherSkeleton, ForecastSkeleton } from '@/components/WeatherSkeleton'
-import { Cloud, CloudRain, AlertCircle, ChevronDown, Calendar, Compass, Info } from 'lucide-react'
+import { Cloud, CloudRain, AlertCircle, ChevronDown, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -25,8 +20,6 @@ const WeatherCharts = lazy(() => import('@/components/WeatherCharts').then(m => 
 function App() {
   const { currentWeather, dailyForecast, hourlyForecast, loading, error, unit, fetchWeather, fetchWeatherByLocation, toggleUnit } = useWeather()
   const [showForecast, setShowForecast] = useState(false)
-  const [showWind, setShowWind] = useState(false)
-  const [showDetails, setShowDetails] = useState(false)
 
   useEffect(() => {
     // Load default city (Lagos) on mount
@@ -82,9 +75,7 @@ function App() {
                   <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
                     WeatherSphere
                   </h1>
-                  <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                    Professional Weather Intelligence
-                  </p>
+
                 </div>
               </motion.div>
               <div className="flex items-center gap-2 sm:gap-3 self-start sm:self-auto">
@@ -109,24 +100,6 @@ function App() {
           >
             <SearchBar onSearch={handleSearch} onLocationClick={fetchWeatherByLocation} loading={loading} />
           </motion.div>
-
-          {/* Weather Description - moved to top */}
-          {currentWeather && (
-            <motion.div
-              className="mb-10"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.15 }}
-            >
-              <WeatherDescription
-                temp={currentWeather.main.temp}
-                condition={currentWeather.weather[0].main}
-                description={currentWeather.weather[0].description}
-                isDay={true}
-                unit={unit}
-              />
-            </motion.div>
-          )}
 
           {/* Recent Cities */}
           <RecentCities onCitySelect={handleRecentCitySelect} />
@@ -192,167 +165,14 @@ function App() {
                 </motion.div>
               )}
 
-              {/* Weather Details Toggle Button */}
-              <motion.div
-                className="mb-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-              >
-                <motion.div
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                >
-                  <Button
-                    onClick={() => setShowDetails(!showDetails)}
-                    variant="outline"
-                    className="w-full justify-between h-auto py-5 px-6
-                      bg-gradient-to-r from-blue-500/10 via-blue-500/5 to-cyan-500/10
-                      hover:from-blue-500/20 hover:via-blue-500/10 hover:to-cyan-500/20
-                      border-2 border-blue-500/20 hover:border-blue-500/40
-                      shadow-lg hover:shadow-xl
-                      rounded-2xl
-                      transition-all duration-300"
-                  >
-                    <span className="flex items-center gap-3">
-                      <motion.div
-                        className="p-2 bg-gradient-to-br from-blue-500/30 to-cyan-500/30 rounded-xl"
-                        animate={{
-                          rotate: showDetails ? [0, 10, -10, 0] : 0,
-                        }}
-                        transition={{
-                          duration: 0.5,
-                          delay: 0.2,
-                        }}
-                      >
-                        <Info className="h-5 w-5 text-blue-500" />
-                      </motion.div>
-                      <span className="font-semibold text-lg">Weather Details</span>
-                    </span>
-                    <motion.div
-                      animate={{ rotate: showDetails ? 180 : 0 }}
-                      transition={{ duration: 0.3, ease: 'easeInOut' }}
-                      className="p-1 bg-blue-500/10 rounded-lg"
-                    >
-                      <ChevronDown className="h-5 w-5 text-blue-500" />
-                    </motion.div>
-                  </Button>
-                </motion.div>
-              </motion.div>
-
-              {/* Collapsible Weather Details Content */}
-              <AnimatePresence>
-                {showDetails && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="overflow-hidden mb-10"
-                  >
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <AdditionalDetails weather={currentWeather} unit={unit} />
-                    </motion.div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* Wind Direction Toggle Button */}
-              <motion.div
-                className="mb-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.35 }}
-              >
-                <motion.div
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                >
-                  <Button
-                    onClick={() => setShowWind(!showWind)}
-                    variant="outline"
-                    className="w-full justify-between h-auto py-5 px-6
-                      bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-teal-500/10
-                      hover:from-emerald-500/20 hover:via-emerald-500/10 hover:to-teal-500/20
-                      border-2 border-emerald-500/20 hover:border-emerald-500/40
-                      shadow-lg hover:shadow-xl
-                      rounded-2xl
-                      transition-all duration-300"
-                  >
-                    <span className="flex items-center gap-3">
-                      <motion.div
-                        className="p-2 bg-gradient-to-br from-emerald-500/30 to-teal-500/30 rounded-xl"
-                        animate={{
-                          rotate: showWind ? [0, 15, -15, 0] : 0,
-                        }}
-                        transition={{
-                          duration: 0.5,
-                          delay: 0.2,
-                        }}
-                      >
-                        <Compass className="h-5 w-5 text-emerald-500" />
-                      </motion.div>
-                      <span className="font-semibold text-lg">Wind Direction</span>
-                    </span>
-                    <motion.div
-                      animate={{ rotate: showWind ? 180 : 0 }}
-                      transition={{ duration: 0.3, ease: 'easeInOut' }}
-                      className="p-1 bg-emerald-500/10 rounded-lg"
-                    >
-                      <ChevronDown className="h-5 w-5 text-emerald-500" />
-                    </motion.div>
-                  </Button>
-                </motion.div>
-              </motion.div>
-
-              {/* Collapsible Wind Compass Content */}
-              <AnimatePresence>
-                {showWind && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="overflow-hidden mb-10"
-                  >
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <WindCompass direction={currentWeather.wind.deg} speed={currentWeather.wind.speed} unit={unit} />
-                    </motion.div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* Weather Map & Quick Cities */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-10">
+              {/* Weather Map */}
+              <div className="mb-10">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.45 }}
                 >
                   <WeatherMap lat={currentWeather.coord.lat} lon={currentWeather.coord.lon} />
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.5 }}
-                >
-                  <ShareWeather
-                    city={currentWeather.name}
-                    temp={currentWeather.main.temp}
-                    condition={currentWeather.weather[0].description}
-                    unit={unit}
-                  />
                 </motion.div>
               </div>
 
@@ -445,31 +265,7 @@ function App() {
                 )}
               </AnimatePresence>
 
-              {/* Weekly Summary & Weather Tips */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-10">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.45 }}
-                >
-                  <WeeklySummary dailyForecast={dailyForecast} unit={unit} />
-                </motion.div>
 
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.5 }}
-                >
-                  <WeatherTips
-                    temp={currentWeather?.main.temp ?? 0}
-                    humidity={currentWeather?.main.humidity ?? 0}
-                    windSpeed={currentWeather?.wind.speed ?? 0}
-                    pop={0}
-                    condition={currentWeather?.weather[0]?.main ?? ''}
-                    unit={unit}
-                  />
-                </motion.div>
-              </div>
             </>
           ) : null}
 
@@ -542,7 +338,7 @@ function App() {
               >
                 OpenWeatherMap
               </a>{' '}
-              API. Built by IbnAbubakri
+              API
             </p>
           </motion.footer>
         </div>
