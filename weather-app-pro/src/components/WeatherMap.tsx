@@ -74,11 +74,13 @@ export function WeatherMap({ lat, lon }: WeatherMapProps) {
             </div>
           </DialogHeader>
           <div className="flex-1 relative bg-muted">
-            <iframe
-              src={`https://openweathermap.org/weathermap?basemap=map&cities=true&layer=${activeLayer}&lat=${lat}&lon=${lon}&zoom=10`}
-              className="absolute inset-0 w-full h-full border-0"
-              title={`Weather map showing ${layerConfig.find(l => l.id === activeLayer)?.name.toLowerCase() ?? 'weather'} layer`}
-            />
+            {open && (
+              <iframe
+                src={`https://openweathermap.org/weathermap?basemap=map&cities=true&layer=${activeLayer}&lat=${lat}&lon=${lon}&zoom=10`}
+                className="absolute inset-0 w-full h-full border-0"
+                title={`Weather map showing ${layerConfig.find(l => l.id === activeLayer)?.name.toLowerCase() ?? 'weather'} layer`}
+              />
+            )}
           </div>
         </DialogContent>
       </Dialog>

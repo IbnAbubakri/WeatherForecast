@@ -93,13 +93,13 @@ export function RecentCities({ onCitySelect }: RecentCitiesProps) {
             whileTap={{ scale: 0.95 }}
           >
             <span className="text-sm text-foreground">{city.name}</span>
-            <button
-              onClick={(e) => removeCity(city.name, e)}
-              className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 hover:bg-destructive/20 rounded cursor-pointer"
-              aria-label={`Remove ${city.name}`}
-            >
-              <X className="h-3 w-3 text-muted-foreground hover:text-destructive" />
-            </button>
+              <button
+                onClick={(e) => removeCity(city.name, e)}
+                className="opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-destructive/20 rounded cursor-pointer"
+                aria-label={`Remove ${city.name}`}
+              >
+                <X className="h-3 w-3 text-muted-foreground hover:text-destructive" />
+              </button>
           </motion.button>
         ))}
       </div>

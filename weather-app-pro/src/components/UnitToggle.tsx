@@ -11,7 +11,11 @@ export function UnitToggle({ unit, onToggle }: UnitToggleProps) {
   return (
     <div className="flex items-center gap-3">
       <span className="text-sm font-medium text-muted-foreground">Temperature Unit</span>
-      <div className="flex items-center gap-1 bg-muted/50 border border-border rounded-lg p-1">
+      <div
+        className="flex items-center gap-1 bg-muted/50 border border-border rounded-lg p-1"
+        role="radiogroup"
+        aria-label="Temperature unit"
+      >
         <motion.div whileTap={{ scale: 0.95 }} whileHover={{ scale: 1.05 }}>
           <Button
             type="button"
@@ -19,7 +23,8 @@ export function UnitToggle({ unit, onToggle }: UnitToggleProps) {
             size="sm"
             onClick={() => unit !== 'metric' && onToggle()}
             className="min-w-[60px] cursor-pointer"
-            aria-pressed={unit === 'metric'}
+            role="radio"
+            aria-checked={unit === 'metric'}
           >
             °C
           </Button>
@@ -31,7 +36,8 @@ export function UnitToggle({ unit, onToggle }: UnitToggleProps) {
             size="sm"
             onClick={() => unit !== 'imperial' && onToggle()}
             className="min-w-[60px] cursor-pointer"
-            aria-pressed={unit === 'imperial'}
+            role="radio"
+            aria-checked={unit === 'imperial'}
           >
             °F
           </Button>

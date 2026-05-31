@@ -26,24 +26,13 @@ export function AnimatedCurrentWeather({ data, unit, index }: AnimatedCurrentWea
         <CardContent className="p-4 sm:p-6 md:p-10">
           <div className="grid lg:grid-cols-2 gap-6 lg:gap-10">
             <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
-              <motion.div
-                className="flex-shrink-0"
-                animate={{
-                  rotate: [0, 5, -5, 0],
-                  scale: [1, 1.02, 1],
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  repeatDelay: 4,
-                }}
-              >
+              <div className="flex-shrink-0">
                 <WeatherIcon
                   iconCode={data.weather[0].icon}
                   size={120}
                   className="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 text-primary"
                 />
-              </motion.div>
+              </div>
               <div className="text-center sm:text-left">
                 <motion.div
                   className="flex items-baseline justify-center sm:justify-start gap-1 sm:gap-2"

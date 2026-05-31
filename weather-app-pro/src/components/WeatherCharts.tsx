@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   LineChart,
@@ -14,6 +14,7 @@ import {
 } from 'recharts'
 import { DailyForecast } from '@/types/weather'
 import { Droplets, Wind, Thermometer, ChevronDown, Waves } from 'lucide-react'
+import { ChartContainer, ChartTooltipContent } from '@/components/ui/chart'
 
 type ChartType = 'temperature' | 'precipitation' | 'wind' | 'humidity' | null
 
@@ -24,6 +25,18 @@ interface WeatherChartsProps {
 
 export function WeatherCharts({ forecast, unit }: WeatherChartsProps) {
   const [activeChart, setActiveChart] = useState<ChartType>(null)
+  const [reducedMotion, setReducedMotion] = useState(
+    typeof window !== 'undefined'
+      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      : false
+  )
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
 
   const tempUnit = unit === 'metric' ? '°C' : '°F'
   const speedUnit = unit === 'metric' ? 'm/s' : 'mph'
@@ -126,48 +139,44 @@ export function WeatherCharts({ forecast, unit }: WeatherChartsProps) {
                 </div>
                 <h3 className="text-lg font-semibold text-foreground">Temperature Forecast</h3>
               </div>
-              <ResponsiveContainer width="100%" height={250}>
-                <LineChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="stroke-border/30" />
-                  <XAxis
-                    dataKey="name"
-                    stroke="hsl(var(--muted-foreground))"
-                    style={{ fontSize: '12px' }}
-                  />
-                  <YAxis
-                    stroke="hsl(var(--muted-foreground))"
-                    style={{ fontSize: '12px' }}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: 'hsl(var(--card))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '8px',
-                      color: 'hsl(var(--foreground))',
-                    }}
-                    labelStyle={{ color: 'hsl(var(--foreground))' }}
-                  />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="max"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth={2}
-                    name={`Max (${tempUnit})`}
-                    dot={{ fill: 'hsl(var(--primary))', r: 4 }}
-                    activeDot={{ r: 6 }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="min"
-                    stroke="hsl(var(--accent))"
-                    strokeWidth={2}
-                    name={`Min (${tempUnit})`}
-                    dot={{ fill: 'hsl(var(--accent))', r: 4 }}
-                    activeDot={{ r: 6 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+              <ChartContainer>
+                <ResponsiveContainer width="100%" height={250}>
+                  <LineChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="stroke-border/30" />
+                    <XAxis
+                      dataKey="name"
+                      stroke="hsl(var(--muted-foreground))"
+                      style={{ fontSize: '12px' }}
+                    />
+                    <YAxis
+                      stroke="hsl(var(--muted-foreground))"
+                      style={{ fontSize: '12px' }}
+                    />
+                    <Tooltip content={<ChartTooltipContent />} />
+                    <Legend />
+                    <Line
+                      type="monotone"
+                      dataKey="max"
+                      stroke="hsl(var(--primary))"
+                      strokeWidth={2}
+                      name={`Max (${tempUnit})`}
+                      dot={{ fill: 'hsl(var(--primary))', r: 4 }}
+                      activeDot={{ r: 6 }}
+                      isAnimationActive={!reducedMotion}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="min"
+                      stroke="hsl(var(--accent))"
+                      strokeWidth={2}
+                      name={`Min (${tempUnit})`}
+                      dot={{ fill: 'hsl(var(--accent))', r: 4 }}
+                      activeDot={{ r: 6 }}
+                      isAnimationActive={!reducedMotion}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </ChartContainer>
             </div>
           </motion.div>
         )}
@@ -187,46 +196,39 @@ export function WeatherCharts({ forecast, unit }: WeatherChartsProps) {
                 </div>
                 <h3 className="text-lg font-semibold text-foreground">Precipitation Probability</h3>
               </div>
-              <ResponsiveContainer width="100%" height={250}>
-                <AreaChart data={chartData}>
-                  <defs>
-                    <linearGradient id="precipGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.1}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="stroke-border/30" />
-                  <XAxis
-                    dataKey="name"
-                    stroke="hsl(var(--muted-foreground))"
-                    style={{ fontSize: '12px' }}
-                  />
-                  <YAxis
-                    stroke="hsl(var(--muted-foreground))"
-                    style={{ fontSize: '12px' }}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                      border: '1px solid rgba(56, 189, 248, 0.3)',
-                      borderRadius: '8px',
-                      color: '#fff',
-                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                    }}
-                    labelStyle={{ color: '#38BDF8' }}
-                    formatter={(value) => [`${(value as number) ?? 0}%`, 'Probability']}
-                  />
-                  <Legend />
-                  <Area
-                    type="monotone"
-                    dataKey="precipitation"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth={3}
-                    fill="url(#precipGradient)"
-                    name="Precipitation %"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
+              <ChartContainer>
+                <ResponsiveContainer width="100%" height={250}>
+                  <AreaChart data={chartData}>
+                    <defs>
+                      <linearGradient id="precipGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.1}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="stroke-border/30" />
+                    <XAxis
+                      dataKey="name"
+                      stroke="hsl(var(--muted-foreground))"
+                      style={{ fontSize: '12px' }}
+                    />
+                    <YAxis
+                      stroke="hsl(var(--muted-foreground))"
+                      style={{ fontSize: '12px' }}
+                    />
+                    <Tooltip content={<ChartTooltipContent />} />
+                    <Legend />
+                    <Area
+                      type="monotone"
+                      dataKey="precipitation"
+                      stroke="hsl(var(--primary))"
+                      strokeWidth={3}
+                      fill="url(#precipGradient)"
+                      name="Precipitation %"
+                      isAnimationActive={!reducedMotion}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </ChartContainer>
             </div>
           </motion.div>
         )}
@@ -246,40 +248,34 @@ export function WeatherCharts({ forecast, unit }: WeatherChartsProps) {
                 </div>
                 <h3 className="text-lg font-semibold text-foreground">Wind Speed Forecast</h3>
               </div>
-              <ResponsiveContainer width="100%" height={250}>
-                <LineChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="stroke-border/30" />
-                  <XAxis
-                    dataKey="name"
-                    stroke="hsl(var(--muted-foreground))"
-                    style={{ fontSize: '12px' }}
-                  />
-                  <YAxis
-                    stroke="hsl(var(--muted-foreground))"
-                    style={{ fontSize: '12px' }}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: 'hsl(var(--card))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '8px',
-                      color: 'hsl(var(--foreground))',
-                    }}
-                    labelStyle={{ color: 'hsl(var(--foreground))' }}
-                    formatter={(value) => [`${(value as number) ?? 0} ${speedUnit}`, 'Wind']}
-                  />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="wind"
-                    stroke="hsl(var(--secondary))"
-                    strokeWidth={2}
-                    name={`Speed (${speedUnit})`}
-                    dot={{ fill: 'hsl(var(--secondary))', r: 4 }}
-                    activeDot={{ r: 6 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+              <ChartContainer>
+                <ResponsiveContainer width="100%" height={250}>
+                  <LineChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="stroke-border/30" />
+                    <XAxis
+                      dataKey="name"
+                      stroke="hsl(var(--muted-foreground))"
+                      style={{ fontSize: '12px' }}
+                    />
+                    <YAxis
+                      stroke="hsl(var(--muted-foreground))"
+                      style={{ fontSize: '12px' }}
+                    />
+                    <Tooltip content={<ChartTooltipContent />} />
+                    <Legend />
+                    <Line
+                      type="monotone"
+                      dataKey="wind"
+                      stroke="hsl(var(--secondary))"
+                      strokeWidth={2}
+                      name={`Speed (${speedUnit})`}
+                      dot={{ fill: 'hsl(var(--secondary))', r: 4 }}
+                      activeDot={{ r: 6 }}
+                      isAnimationActive={!reducedMotion}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </ChartContainer>
             </div>
           </motion.div>
         )}
@@ -299,46 +295,40 @@ export function WeatherCharts({ forecast, unit }: WeatherChartsProps) {
                 </div>
                 <h3 className="text-lg font-semibold text-foreground">Humidity Levels</h3>
               </div>
-              <ResponsiveContainer width="100%" height={250}>
-                <AreaChart data={chartData}>
-                  <defs>
-                    <linearGradient id="humidityGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="hsl(180, 70%, 50%)" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="hsl(180, 70%, 50%)" stopOpacity={0.1}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="stroke-border/30" />
-                  <XAxis
-                    dataKey="name"
-                    stroke="hsl(var(--muted-foreground))"
-                    style={{ fontSize: '12px' }}
-                  />
-                  <YAxis
-                    stroke="hsl(var(--muted-foreground))"
-                    style={{ fontSize: '12px' }}
-                    domain={[0, 100]}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: 'hsl(var(--card))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '8px',
-                      color: 'hsl(var(--foreground))',
-                    }}
-                    labelStyle={{ color: 'hsl(var(--foreground))' }}
-                    formatter={(value) => [`${(value as number) ?? 0}%`, 'Humidity']}
-                  />
-                  <Legend />
-                  <Area
-                    type="monotone"
-                    dataKey="humidity"
-                    stroke="hsl(180, 70%, 50%)"
-                    strokeWidth={3}
-                    fill="url(#humidityGradient)"
-                    name="Humidity %"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
+              <ChartContainer>
+                <ResponsiveContainer width="100%" height={250}>
+                  <AreaChart data={chartData}>
+                    <defs>
+                      <linearGradient id="humidityGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="hsl(180, 70%, 50%)" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="hsl(180, 70%, 50%)" stopOpacity={0.1}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="stroke-border/30" />
+                    <XAxis
+                      dataKey="name"
+                      stroke="hsl(var(--muted-foreground))"
+                      style={{ fontSize: '12px' }}
+                    />
+                    <YAxis
+                      stroke="hsl(var(--muted-foreground))"
+                      style={{ fontSize: '12px' }}
+                      domain={[0, 100]}
+                    />
+                    <Tooltip content={<ChartTooltipContent />} />
+                    <Legend />
+                    <Area
+                      type="monotone"
+                      dataKey="humidity"
+                      stroke="hsl(180, 70%, 50%)"
+                      strokeWidth={3}
+                      fill="url(#humidityGradient)"
+                      name="Humidity %"
+                      isAnimationActive={!reducedMotion}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </ChartContainer>
             </div>
           </motion.div>
         )}

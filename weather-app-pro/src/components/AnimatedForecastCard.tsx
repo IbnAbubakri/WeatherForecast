@@ -31,23 +31,13 @@ export function AnimatedForecastCard({ data, unit, index }: AnimatedForecastCard
               <p className="text-sm text-muted-foreground">{dateStr}</p>
             </div>
 
-            <motion.div
-              animate={{
-                rotate: [0, 10, -10, 0],
-              }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                repeatDelay: 4,
-                delay: index * 0.3,
-              }}
-            >
-              <WeatherIcon
-                iconCode={data.weather.icon}
-                size={72}
-                className="text-primary"
-              />
-            </motion.div>
+              <div>
+                <WeatherIcon
+                  iconCode={data.weather.icon}
+                  size={72}
+                  className="text-primary"
+                />
+              </div>
 
             <p className="text-sm text-muted-foreground capitalize text-center h-5">
               {data.weather.description}

@@ -15,7 +15,7 @@
     --secondary: 262 83% 58%;
     --secondary-foreground: 0 0% 100%;
     --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted-foreground: 215 16% 35%;
     --accent: 24 95% 53%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
@@ -74,7 +74,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Bricolage Grotesque', serif;
+    font-family: 'Bricolage Grotesque', sans-serif;
     font-weight: 700;
   }
 }
@@ -95,7 +95,15 @@
   }
 
   .glass-card {
-    @apply bg-card/80 backdrop-blur-xl border border-border/50;
+    @apply bg-card/80 backdrop-blur-xl border border-border/50 shadow-sm;
+  }
+
+  .bg-weather-day {
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.3) 0%, hsl(var(--primary) / 0.1) 50%, hsl(199 89% 48% / 0.05) 100%);
+  }
+
+  .bg-weather-night {
+    background: linear-gradient(135deg, hsl(222 47% 11%) 0%, hsl(223 47% 15%) 50%, hsl(222 47% 8%) 100%);
   }
 
   .subtle-shadow {

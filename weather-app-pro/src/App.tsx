@@ -22,13 +22,15 @@ function App() {
   const [showForecast, setShowForecast] = useState(false)
 
   useEffect(() => {
-    // Load default city (Lagos) on mount
-    fetchWeather('Lagos')
+    const params = new URLSearchParams(window.location.search)
+    const cityParam = params.get('city')
+    fetchWeather(cityParam || 'Lagos')
   }, [])
 
   const handleSearch = (city: string) => {
     fetchWeather(city)
     addRecentCity(city)
+    window.history.replaceState(null, '', `?city=${encodeURIComponent(city)}`)
   }
 
   const handleRecentCitySelect = (city: string) => {
@@ -58,19 +60,9 @@ function App() {
                 whileHover={{ scale: 1.01 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 25 }}
               >
-                <motion.div
-                  className="bg-gradient-to-br from-primary/20 to-secondary/20 p-2 sm:p-3 rounded-xl"
-                  animate={{
-                    rotate: [0, 5, -5, 0],
-                  }}
-                  transition={{
-                    duration: 8,
-                    repeat: Infinity,
-                    repeatDelay: 5,
-                  }}
-                >
+                <div className="bg-gradient-to-br from-primary/20 to-secondary/20 p-2 sm:p-3 rounded-xl">
                   <CloudRain className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-                </motion.div>
+                </div>
                 <div>
                   <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
                     WeatherSphere
@@ -277,20 +269,9 @@ function App() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
             >
-              <motion.div
-                className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-full mb-6"
-                animate={{
-                  y: [0, -10, 0],
-                  scale: [1, 1.05, 1],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  repeatDelay: 2,
-                }}
-              >
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-full mb-6">
                 <Cloud className="h-10 w-10 text-primary" />
-              </motion.div>
+              </div>
               <h2 className="text-2xl font-semibold text-foreground mb-2">
                 No Weather Data
               </h2>
@@ -306,13 +287,14 @@ function App() {
                 {['London', 'New York', 'Tokyo', 'Paris', 'Lagos'].map((city, index) => (
                   <motion.button
                     key={city}
+                    disabled={loading}
                     onClick={() => fetchWeather(city)}
-                    className="px-4 py-2 bg-muted/50 hover:bg-muted border border-border rounded-lg transition-all hover:scale-105 hover:shadow-md cursor-pointer"
+                    className="px-4 py-2 bg-muted/50 hover:bg-muted border border-border rounded-lg transition-all hover:scale-105 hover:shadow-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4 + index * 0.05 }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    whileHover={loading ? {} : { scale: 1.05 }}
+                    whileTap={loading ? {} : { scale: 0.95 }}
                   >
                     {city}
                   </motion.button>
@@ -326,7 +308,7 @@ function App() {
             className="mt-20 pt-8 border-t border-border/50 text-center text-sm text-muted-foreground"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.8, duration: 0.6 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
           >
             <p>
               Powered by{' '}
