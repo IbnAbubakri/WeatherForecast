@@ -6,16 +6,6 @@ import { ThemeProvider } from './contexts/ThemeContext'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { Toaster } from '@/components/ui/toaster'
 
-// Register service worker for PWA
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .catch(() => {
-        // Silently fail - service worker is optional
-      })
-  })
-}
-
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary>
