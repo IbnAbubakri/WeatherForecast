@@ -1,3 +1,6 @@
+// © 2026 Abubakri Faaruq Adebowale (IbnAbubakri). All rights reserved.
+// Faruqsuzay@gmail.com | +2349061345507
+
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 

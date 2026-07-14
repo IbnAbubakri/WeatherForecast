@@ -1,3 +1,6 @@
+// © 2026 Abubakri Faaruq Adebowale (IbnAbubakri). All rights reserved.
+// Faruqsuzay@gmail.com | +2349061345507
+
 import { Moon, Sun } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'

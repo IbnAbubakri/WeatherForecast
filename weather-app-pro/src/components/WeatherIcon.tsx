@@ -1,3 +1,6 @@
+// © 2026 Abubakri Faaruq Adebowale (IbnAbubakri). All rights reserved.
+// Faruqsuzay@gmail.com | +2349061345507
+
 import { Cloud, CloudDrizzle, CloudRain, CloudSnow, CloudLightning, Sun, Wind } from 'lucide-react'
 
 interface WeatherIconProps {

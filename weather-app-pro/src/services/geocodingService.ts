@@ -1,3 +1,6 @@
+// © 2026 Abubakri Faaruq Adebowale (IbnAbubakri). All rights reserved.
+// Faruqsuzay@gmail.com | +2349061345507
+
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY
 const BASE_URL = 'https://api.openweathermap.org/geo/1.0'
 

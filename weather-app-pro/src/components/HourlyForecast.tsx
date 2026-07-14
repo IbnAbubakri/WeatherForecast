@@ -1,3 +1,6 @@
+// © 2026 Abubakri Faaruq Adebowale (IbnAbubakri). All rights reserved.
+// Faruqsuzay@gmail.com | +2349061345507
+
 import { motion } from 'framer-motion'
 import type { HourlyForecast as HourlyForecastType } from '@/types/weather'
 import { Clock, Droplets, Wind, Cloud } from 'lucide-react'

@@ -1,3 +1,6 @@
+// © 2026 Abubakri Faaruq Adebowale (IbnAbubakri). All rights reserved.
+// Faruqsuzay@gmail.com | +2349061345507
+
 import { Button } from '@/components/ui/button'
 import { TemperatureUnit } from '@/types/weather'
 import { motion } from 'framer-motion'

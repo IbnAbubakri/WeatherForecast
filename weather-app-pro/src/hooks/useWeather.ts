@@ -1,3 +1,6 @@
+// © 2026 Abubakri Faaruq Adebowale (IbnAbubakri). All rights reserved.
+// Faruqsuzay@gmail.com | +2349061345507
+
 import { useState, useCallback, useRef } from 'react'
 import type { WeatherState, TemperatureUnit, DailyForecast, HourlyForecast } from '@/types/weather'
 import { weatherService } from '@/services/weatherService'

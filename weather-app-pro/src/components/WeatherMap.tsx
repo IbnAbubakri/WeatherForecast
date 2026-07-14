@@ -1,3 +1,6 @@
+// © 2026 Abubakri Faaruq Adebowale (IbnAbubakri). All rights reserved.
+// Faruqsuzay@gmail.com | +2349061345507
+
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Map, Thermometer, CloudRain, Cloud, Wind, Maximize2 } from 'lucide-react'
